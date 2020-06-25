@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<files>
+    <file>
+        <name>file1.txt</name>
+        <source_path>abspath</source_path>
+        <destination_path>abspath</destination_path>
+    </file>
+
+    <file>
+        <name>file2.txt</name>
+        <source_path>abs_path</source_path>
+        <destination_path>abs_path</destination_path>
+    </file>
+</files>
