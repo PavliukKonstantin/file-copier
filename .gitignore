@@ -133,5 +133,7 @@ dmypy.json
 .pyre/
 
 # Moved files
-tests/source/
-tests/destination/
+*tests/source/
+*tests/destination/
+*tests/configs/
+*tests/logs/

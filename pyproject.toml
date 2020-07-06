@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "file_copier"
-version = "0.1.0"
-description = ""
+version = "1.0.0"
+description = "Copy files defined in xml config"
 authors = ["PavliukKonstantin <Pavliuk.Konstantin@gmail.com>"]
 
 [tool.poetry.dependencies]
@@ -9,6 +9,7 @@ python = "^3.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+
 flake8 = "^3.8.3"
 autopep8 = "^1.5.3"
 flake8-docstrings = "^1.5.0"
