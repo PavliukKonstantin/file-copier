@@ -8,7 +8,7 @@ import time
 from xml.etree import ElementTree
 
 
-class Copier(object):
+class FilesCopier(object):
     """Copy files defined in xml config.
 
     This class contains methods for copying files whose copy options
@@ -233,7 +233,7 @@ class Copier(object):
             text = "File doesn't copied - {0}".format(path_to_file)
             self._log_error(text)
 
-    def _progress(
+    def _visualize_progress_bar(
         self,
         sequence_number: int,
         total_count: int,
@@ -281,7 +281,7 @@ class Copier(object):
             destination_path = self._get_destination_path(copied_file)
             path_to_file = os.path.join(source_path, file_name)
 
-            self._progress(
+            self._visualize_progress_bar(
                 num,
                 len(copied_files),
                 name_of_copied_file="Copying - {0}".format(file_name),
@@ -299,7 +299,7 @@ if __name__ == "__main__":
     )
     log_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
-        "copier.log",
+        "files_copier.log",
     )
-    copier = Copier(config_path, log_path)
+    copier = FilesCopier(config_path, log_path)
     copier.copy_files()

@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from file_copier.copier import Copier
+from files_copier.files_copier import FilesCopier
 
 
 def get_current_path() -> str:
@@ -129,7 +129,7 @@ def prepare_correct_config() -> tuple:
     and the correct configuration parameters.
     """
     paths = get_paths_for_test("correct_config")
-    (source_path, destination_path, config_file_path, log_file_path) = paths
+    source_path, destination_path, config_file_path, log_file_path = paths
 
     config_text = """<?xml version="1.0"?>
 
@@ -151,7 +151,7 @@ def prepare_correct_config() -> tuple:
         destination_path=destination_path,
     )
     create_files_for_test(config_text, config_file_path, log_file_path)
-    return Copier(config_file_path, log_file_path), paths
+    return FilesCopier(config_file_path, log_file_path), paths
 
 
 @pytest.fixture()
@@ -174,7 +174,7 @@ def prepare_config_with_incorrect_parameters() -> tuple:
 
     </files>""".format(source_path=source_path)
     create_files_for_test(config_text, config_file_path, log_file_path)
-    return Copier(config_file_path, log_file_path), paths
+    return FilesCopier(config_file_path, log_file_path), paths
 
 
 @pytest.fixture()
@@ -202,7 +202,7 @@ def prepare_config_with_nonexistent_file() -> tuple:
         destination_path=destination_path,
     )
     create_files_for_test(config_text, config_file_path, log_file_path)
-    return Copier(config_file_path, log_file_path), paths
+    return FilesCopier(config_file_path, log_file_path), paths
 
 
 @pytest.fixture()
@@ -218,7 +218,7 @@ def prepare_incorrect_config() -> tuple:
 
     <"""
     create_files_for_test(config_text, config_file_path, log_file_path)
-    return Copier(config_file_path, log_file_path), paths
+    return FilesCopier(config_file_path, log_file_path), paths
 
 
 @pytest.fixture()
@@ -231,4 +231,4 @@ def prepare_empty_config() -> tuple:
     _, _, config_file_path, log_file_path = paths
     config_text = """ """
     create_files_for_test(config_text, config_file_path, log_file_path)
-    return Copier(config_file_path, log_file_path), paths
+    return FilesCopier(config_file_path, log_file_path), paths
