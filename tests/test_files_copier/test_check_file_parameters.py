@@ -6,8 +6,8 @@ def test_correct_config(prepare_correct_config):
     source_path, destination_path, _, _ = paths
     file_parameters = {
         "name": "file_one.txt",
-        "source_path": "{0}".format(source_path),
-        "destination_path": "{0}".format(destination_path),
+        "source_path": source_path,
+        "destination_path": destination_path,
     }
     check_result = copier.check_file_parameters(file_parameters)
     assert check_result is True
@@ -20,7 +20,7 @@ def test_config_with_incorrect_parameters(
     source_path, _, _, _ = paths
     file_parameters = {
         "name": "file_three.txt",
-        "source_path": "{0}".format(source_path),
+        "source_path": source_path,
     }
     check_result = copier.check_file_parameters(file_parameters)
     assert check_result is False
@@ -31,8 +31,8 @@ def test_config_with_nonexistent_file(prepare_config_with_nonexistent_file):
     source_path, destination_path, _, _ = paths
     file_parameters = {
         "name": "file_four.txt",
-        "source_path": "{0}".format(source_path),
-        "destination_path": "{0}".format(destination_path),
+        "source_path": source_path,
+        "destination_path": destination_path,
     }
     check_result = copier.check_file_parameters(file_parameters)
     assert check_result is False
@@ -43,8 +43,8 @@ def test_incorrect_config(prepare_incorrect_config):
     source_path, destination_path, _, _ = paths
     file_parameters = {
         "name": "file_one.txt",
-        "asdasd": "{0}".format(source_path),
-        "zxczxc": "{0}".format(destination_path),
+        "asdasd": source_path,
+        "zxczxc": destination_path,
     }
     check_result = copier.check_file_parameters(file_parameters)
     assert check_result is False

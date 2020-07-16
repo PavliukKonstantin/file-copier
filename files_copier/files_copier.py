@@ -1,10 +1,9 @@
-"""Copy files defined in xml config."""
-
 import logging
 import os
 import shutil
 import sys
 import time
+from typing import Union
 from xml.etree import ElementTree
 
 
@@ -53,9 +52,7 @@ class FilesCopier(object):
         # Init file logger.
         # Unique name is necessary for the correct operation of
         # several instances of the class in one module
-        self.f_logger = logging.getLogger(
-            "File {0}".format(str(self.__hash__())),
-        )
+        self.f_logger = logging.getLogger(f"File {str(self.__hash__())}")
         self.f_logger.setLevel(logging.DEBUG)
         self.f_log = logging.FileHandler(self.log_file)
         self.f_formatter = logging.Formatter(
@@ -67,9 +64,7 @@ class FilesCopier(object):
         # Init console logger.
         # Unique name is necessary for the correct operation of
         # several instances of the class in one module
-        self.c_logger = logging.getLogger(
-            "Console {0}".format(str(self.__hash__())),
-        )
+        self.c_logger = logging.getLogger(f"Console {str(self.__hash__())}")
         self.c_logger.setLevel(logging.INFO)
         self.c_log = logging.StreamHandler()
         self.c_formatter = logging.Formatter("%(levelname)s: %(message)s")
@@ -164,7 +159,7 @@ class FilesCopier(object):
             return True
         return False
 
-    def get_root_of_config(self):
+    def get_root_of_config(self) -> Union[ElementTree.Element, None]:
         """Get root of configuration.
 
         Checks the configuration file for existence and correctness.
@@ -174,18 +169,13 @@ class FilesCopier(object):
             tree = ElementTree.parse(self.config_file)
         except ElementTree.ParseError:
             config_file_path = os.path.abspath(self.config_file)
-            text = "Configuration file is incorrect - {0}".format(
-                config_file_path,
-            )
+            text = f"Configuration file is incorrect - {config_file_path}"
             self._log_error(text)
             return None
         except FileNotFoundError:
             config_file_path = os.path.abspath(self.config_file)
-            text = (
-                "Configuration file doesn't exist - ",
-                "{0}".format(config_file_path),
-            )
-            self._log_error("".join(text))
+            text = (f"Configuration file doesn't exist - {config_file_path}")
+            self._log_error(text)
             return None
         return tree.getroot()
 
@@ -207,14 +197,12 @@ class FilesCopier(object):
                 files.append(file_parameters)
             else:
                 text = (
-                    "File with these parameters can't be copied - ",
-                    "{0}".format(file_parameters),
+                    "File with these parameters can't be copied - "
+                    f"{file_parameters}"
                 )
-                self._log_error("".join(text))
+                self._log_error(text)
         if not files:
-            text = "Config doesn't have files for copy - {0}". format(
-                self.config_file,
-            )
+            text = f"Config doesn't have files for copy - {self.config_file}"
             self._log_error(text)
         return files
 
@@ -223,14 +211,14 @@ class FilesCopier(object):
         try:
             sys.stdout.write("\033[2K")  # clear last stdout line
             shutil.copy2(path_to_file, destination_path)
-            text = "File - {0} successfully copied in -> {1}".format(
-                path_to_file,
-                destination_path,
+            text = (
+                f"File - {path_to_file} successfully "
+                f"copied in -> {destination_path}"
             )
             self._log_info(text)
         except OSError:
             sys.stdout.flush()
-            text = "File doesn't copied - {0}".format(path_to_file)
+            text = f"File doesn't copied - {path_to_file}"
             self._log_error(text)
 
     def _visualize_progress_bar(
@@ -252,15 +240,13 @@ class FilesCopier(object):
         filled_len = int(round(bar_len * sequence_number / float(total_count)))
 
         percents = round(100.0 * sequence_number / float(total_count), 1)
-        progress_bar = "{0}{1}".format(
-            "=" * filled_len, "-" * (bar_len - filled_len),
-        )
+        completed_bar = "=" * filled_len
+        uncompleted_bar = "-" * (bar_len - filled_len)
+        progress_bar = f"{completed_bar}{uncompleted_bar}"
 
-        progress_string = "[{0}] {1}{2} ...{3}\r".format(
-            progress_bar,
-            percents,
-            "%",
-            name_of_copied_file,
+        progress_string = (
+            f"[{progress_bar}] {percents}% "
+            f"...{name_of_copied_file}\r"
         )
         sys.stdout.write("\033[2K")  # clear last stdout line
         sys.stdout.write(progress_string)
@@ -274,7 +260,7 @@ class FilesCopier(object):
         if not copied_files:
             text = "Copying is completed. Nothing is copied."
             self._log_info(text)
-            return None
+            raise SystemExit
         for num, copied_file in enumerate(copied_files):
             source_path = self._get_source_path(copied_file)
             file_name = self._get_file_name(copied_file)
@@ -284,7 +270,7 @@ class FilesCopier(object):
             self._visualize_progress_bar(
                 num,
                 len(copied_files),
-                name_of_copied_file="Copying - {0}".format(file_name),
+                name_of_copied_file=f"Copying - {file_name}"
             )
             time.sleep(1)  # special for progress bar visualize
             self._copy_file(path_to_file, destination_path)

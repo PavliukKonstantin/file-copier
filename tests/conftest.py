@@ -1,5 +1,3 @@
-"""This file contains fixtures for prepare tests."""
-
 import os
 
 import pytest
@@ -46,14 +44,8 @@ def get_paths_for_test(test_name: str) -> tuple:
     destination_path = get_destination_path(current_path)
     configs_path = get_configs_path(current_path)
     logs_path = get_logs_path(current_path)
-    config_file_path = os.path.join(
-        configs_path,
-        "{0}.xml".format(test_name),
-    )
-    log_file_path = os.path.join(
-        logs_path,
-        "{0}.log".format(test_name),
-    )
+    config_file_path = os.path.join(configs_path, f"{test_name}.xml")
+    log_file_path = os.path.join(logs_path, f"{test_name}.log")
     return (
         source_path,
         destination_path,
@@ -131,7 +123,7 @@ def prepare_correct_config() -> tuple:
     paths = get_paths_for_test("correct_config")
     source_path, destination_path, config_file_path, log_file_path = paths
 
-    config_text = """<?xml version="1.0"?>
+    config_text = f"""<?xml version="1.0"?>
 
     <files>
         <file>
@@ -146,10 +138,7 @@ def prepare_correct_config() -> tuple:
             <destination_path>{destination_path}</destination_path>
         </file>
 
-    </files>""".format(
-        source_path=source_path,
-        destination_path=destination_path,
-    )
+    </files>"""
     create_files_for_test(config_text, config_file_path, log_file_path)
     return FilesCopier(config_file_path, log_file_path), paths
 
@@ -164,7 +153,7 @@ def prepare_config_with_incorrect_parameters() -> tuple:
     paths = get_paths_for_test("config_with_incorrect_parameters")
     source_path, _, config_file_path, log_file_path = paths
 
-    config_text = """<?xml version="1.0"?>
+    config_text = f"""<?xml version="1.0"?>
 
     <files>
         <file>
@@ -172,7 +161,7 @@ def prepare_config_with_incorrect_parameters() -> tuple:
             <source_path>{source_path}</source_path>
         </file>
 
-    </files>""".format(source_path=source_path)
+    </files>"""
     create_files_for_test(config_text, config_file_path, log_file_path)
     return FilesCopier(config_file_path, log_file_path), paths
 
@@ -188,7 +177,7 @@ def prepare_config_with_nonexistent_file() -> tuple:
     paths = get_paths_for_test("config_with_nonexistent_file")
     source_path, destination_path, config_file_path, log_file_path = paths
 
-    config_text = """<?xml version="1.0"?>
+    config_text = f"""<?xml version="1.0"?>
 
     <files>
         <file>
@@ -197,10 +186,7 @@ def prepare_config_with_nonexistent_file() -> tuple:
             <destination_path>{destination_path}</destination_path>
         </file>
 
-    </files>""".format(
-        source_path=source_path,
-        destination_path=destination_path,
-    )
+    </files>"""
     create_files_for_test(config_text, config_file_path, log_file_path)
     return FilesCopier(config_file_path, log_file_path), paths
 

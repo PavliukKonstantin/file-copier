@@ -8,13 +8,13 @@ def test_correct_config(prepare_correct_config):
     expected = [
         {
             "name": "file_one.txt",
-            "source_path": "{0}".format(source_path),
-            "destination_path": "{0}".format(destination_path),
+            "source_path": source_path,
+            "destination_path": destination_path,
         },
         {
             "name": "file_two.txt",
-            "source_path": "{0}".format(source_path),
-            "destination_path": "{0}".format(destination_path),
+            "source_path": source_path,
+            "destination_path": destination_path,
         },
     ]
     assert files == expected
