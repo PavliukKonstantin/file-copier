@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from files_copier.files_copier import FilesCopier
+from files_copier.copier import FilesCopier
 
 
 def get_current_path() -> str:

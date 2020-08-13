@@ -1,10 +1,11 @@
-import logging
 import os
 import shutil
 import sys
 import time
 from typing import Union
 from xml.etree import ElementTree
+
+from files_copier import app_logger
 
 
 class FilesCopier(object):
@@ -38,48 +39,21 @@ class FilesCopier(object):
         config_file_path: str,
         log_file_path: str,
     ) -> None:
-        """Initialize attributes of class and loggers for file and console.
+        """
+        Initialize attributes of class and logger to file and console.
 
         Args:
-            config_file_path (str): An absolute or relative path
+            config_file_path (str): an absolute or relative path
                                     to the configuration file
-            log_file_path (str): An absolute or relative path
+            log_file_path (str): an absolute or relative path
                                  to the log file
         """
         self.config_file = config_file_path
-        self.log_file = log_file_path
-
-        # Init file logger.
-        # Unique name is necessary for the correct operation of
-        # several instances of the class in one module
-        self.f_logger = logging.getLogger(f"File {str(self.__hash__())}")
-        self.f_logger.setLevel(logging.DEBUG)
-        self.f_log = logging.FileHandler(self.log_file)
-        self.f_formatter = logging.Formatter(
-            "%(asctime)s - %(levelname)s: %(message)s",
+        self.log_file_path = log_file_path
+        self.logger = app_logger.get_logger(
+            str(self.__hash__()),
+            self.log_file_path,
         )
-        self.f_log.setFormatter(self.f_formatter)
-        self.f_logger.addHandler(self.f_log)
-
-        # Init console logger.
-        # Unique name is necessary for the correct operation of
-        # several instances of the class in one module
-        self.c_logger = logging.getLogger(f"Console {str(self.__hash__())}")
-        self.c_logger.setLevel(logging.INFO)
-        self.c_log = logging.StreamHandler()
-        self.c_formatter = logging.Formatter("%(levelname)s: %(message)s")
-        self.c_log.setFormatter(self.c_formatter)
-        self.c_logger.addHandler(self.c_log)
-
-    def _log_error(self, text: str) -> None:
-        """Log message on LoggerLevel.error."""
-        self.f_logger.error(text)
-        self.c_logger.error(text)
-
-    def _log_info(self, text: str) -> None:
-        """Log message on LoggerLevel.info."""
-        self.f_logger.info(text)
-        self.c_logger.info(text)
 
     def _get_file_name(self, file_parameters: dict) -> str:
         """Get file name for copied file."""
@@ -107,7 +81,8 @@ class FilesCopier(object):
         return os.path.isdir(source_path)
 
     def _check_copied_file(self, file_path: str) -> bool:
-        """Check the copied file.
+        """
+        Check the copied file.
 
         Checks the existence of the copied file and the permission to read.
         """
@@ -122,7 +97,8 @@ class FilesCopier(object):
         return True
 
     def _check_destination_path(self, destination_path: str) -> bool:
-        """Check the directory to which the file is copied.
+        """
+        Check the directory to which the file is copied.
 
         Check existence of destination directory and check write permission.
         If the directory doesn't exist, an attempt is made to create it.
@@ -160,7 +136,8 @@ class FilesCopier(object):
         return False
 
     def get_root_of_config(self) -> Union[ElementTree.Element, None]:
-        """Get root of configuration.
+        """
+        Get root of configuration.
 
         Checks the configuration file for existence and correctness.
         Parsing the configuration in which the copied files are defined.
@@ -170,17 +147,18 @@ class FilesCopier(object):
         except ElementTree.ParseError:
             config_file_path = os.path.abspath(self.config_file)
             text = f"Configuration file is incorrect - {config_file_path}"
-            self._log_error(text)
+            self.logger.error(text)
             return None
         except FileNotFoundError:
             config_file_path = os.path.abspath(self.config_file)
             text = (f"Configuration file doesn't exist - {config_file_path}")
-            self._log_error(text)
+            self.logger.error(text)
             return None
         return tree.getroot()
 
     def get_copied_files_from_conf(self) -> list:
-        """Get the parameters of the copied files from the configuration file.
+        """
+        Get the parameters of the copied files from the configuration file.
 
         Parsing the configuration in which the copied files are defined.
         Also check the ability to copy each of files.
@@ -200,10 +178,10 @@ class FilesCopier(object):
                     "File with these parameters can't be copied - "
                     f"{file_parameters}"
                 )
-                self._log_error(text)
+                self.logger.error(text)
         if not files:
             text = f"Config doesn't have files for copy - {self.config_file}"
-            self._log_error(text)
+            self.logger.error(text)
         return files
 
     def _copy_file(self, path_to_file: str, destination_path: str) -> None:
@@ -215,11 +193,11 @@ class FilesCopier(object):
                 f"File - {path_to_file} successfully "
                 f"copied in -> {destination_path}"
             )
-            self._log_info(text)
+            self.logger.info(text)
         except OSError:
             sys.stdout.flush()
             text = f"File doesn't copied - {path_to_file}"
-            self._log_error(text)
+            self.logger.error(text)
 
     def _visualize_progress_bar(
         self,
@@ -228,14 +206,16 @@ class FilesCopier(object):
         name_of_copied_file: str = "",
         bar_len: int = 50,
     ) -> None:
-        """Display the progress of copying files in the console.
+        """
+        Display the progress of copying files in the console.
 
         Args:
-            sequence_number (int): Sequence number of the copied files.
-            total_count (int): Total number of the copied files.
-            name_of_copied_file (str, optional):
-                    Name of the copied file. Defaults to "".
-            bar_len (int, optional): Length of progress bar. Defaults to 50.
+            sequence_number (int): sequence number of the copied files.
+            total_count (int): total number of the copied files.
+            name_of_copied_file (str, optional): name of the copied file.
+                Defaults to "".
+            bar_len (int, optional): length of progress bar.
+                Defaults to 50.
         """
         filled_len = int(round(bar_len * sequence_number / float(total_count)))
 
@@ -254,12 +234,12 @@ class FilesCopier(object):
 
     def copy_files(self) -> None:
         """Copy files."""
-        self._log_info("Copying started")
+        self.logger.info("Copying started")
 
         copied_files = self.get_copied_files_from_conf()
         if not copied_files:
             text = "Copying is completed. Nothing is copied."
-            self._log_info(text)
+            self.logger.info(text)
             raise SystemExit
         for num, copied_file in enumerate(copied_files):
             source_path = self._get_source_path(copied_file)
@@ -275,7 +255,7 @@ class FilesCopier(object):
             time.sleep(1)  # special for progress bar visualize
             self._copy_file(path_to_file, destination_path)
 
-        self._log_info("Copying is completed")
+        self.logger.info("Copying is completed")
 
 
 if __name__ == "__main__":
