@@ -31,7 +31,8 @@ def get_logs_path(current_path: str) -> str:
 
 
 def get_paths_for_test(test_name: str) -> tuple:
-    """Get all the necessary ways to conduct testing.
+    """
+    Get all the necessary ways to conduct testing.
 
     Args:
         test_name (str): Name of the test
@@ -115,7 +116,8 @@ def remove_files_in_destination() -> None:
 
 @pytest.fixture()
 def prepare_correct_config() -> tuple:
-    """To prepare the test.
+    """
+    To prepare the test.
 
     Prepare for the test with the correct configuration file
     and the correct configuration parameters.
@@ -145,7 +147,8 @@ def prepare_correct_config() -> tuple:
 
 @pytest.fixture()
 def prepare_config_with_incorrect_parameters() -> tuple:
-    """To prepare the test.
+    """
+    To prepare the test.
 
     Prepare for the test with the correct configuration file
     and the incorrect configuration parameters.
@@ -168,7 +171,8 @@ def prepare_config_with_incorrect_parameters() -> tuple:
 
 @pytest.fixture()
 def prepare_config_with_nonexistent_file() -> tuple:
-    """To prepare the test.
+    """
+    To prepare the test.
 
     Prepare for the test with the correct configuration file
     and the correct configuration parameters,
@@ -193,7 +197,8 @@ def prepare_config_with_nonexistent_file() -> tuple:
 
 @pytest.fixture()
 def prepare_incorrect_config() -> tuple:
-    """To prepare the test.
+    """
+    To prepare the test.
 
     Prepare to run the test with a configuration file that has a syntax error.
     """
@@ -209,7 +214,8 @@ def prepare_incorrect_config() -> tuple:
 
 @pytest.fixture()
 def prepare_empty_config() -> tuple:
-    """To prepare the test.
+    """
+    To prepare the test.
 
     Prepare to run a test with an empty configuration file.
     """

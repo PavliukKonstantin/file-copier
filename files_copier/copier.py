@@ -9,7 +9,8 @@ from files_copier import app_logger
 
 
 class FilesCopier(object):
-    """Copy files defined in xml config.
+    """
+    Copy files defined in xml config.
 
     This class contains methods for copying files whose copy options
     are defined in the configuration file. Before copying,
